@@ -1,0 +1,25 @@
+version: '3.3'
+
+services:
+  orientdb:
+    image: orientdb:3.0.0m2
+    ports:
+      - 2424:2424
+      - 2480:2480
+    environment:
+      ORIENTDB_ROOT_PASSWORD: 'orientdb'
+    volumes:
+      - orientdb_data:/opt/orientdb/databases
+
+  graphflow:
+    image: graphflow/graphflow:develop
+    ports:
+      - 11080:11080
+
+  graphflow-api:
+    image: graphflow/graphflow-api:develop
+    ports:
+      - 16660:16660
+
+volumes:
+  orientdb_data:

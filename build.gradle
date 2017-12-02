@@ -1,0 +1,130 @@
+buildscript {
+    repositories {
+        mavenLocal()
+        jcenter()
+        maven { url "https://repo.spring.io/snapshot" }
+        maven { url "https://repo.spring.io/milestone" }
+    }
+    dependencies {
+        classpath "io.spring.gradle:dependency-management-plugin:1.0.3.RELEASE"
+        classpath "org.springframework.boot:spring-boot-gradle-plugin:2.0.0.M7"
+        classpath "org.jfrog.buildinfo:build-info-extractor-gradle:latest.release"
+        classpath('se.transmode.gradle:gradle-docker:1.2')
+    }
+}
+
+plugins {
+    id 'ch.netzwerg.release' version '1.2.5'
+}
+
+apply plugin: 'java'
+apply plugin: "io.spring.dependency-management"
+apply plugin: 'org.springframework.boot'
+apply plugin: 'maven-publish'
+apply plugin: "docker"
+
+group = 'org.graphflow'
+
+jar {
+    baseName = 'graphflow'
+
+    sourceCompatibility = 1.8
+    targetCompatibility = 1.8
+}
+
+repositories {
+    mavenLocal()
+    jcenter()
+    maven { url "https://repo.spring.io/snapshot" }
+    maven { url "https://repo.spring.io/milestone" }
+}
+
+dependencyManagement {
+    imports {
+        mavenBom 'org.springframework.boot:spring-boot-dependencies:2.0.0.M7'
+    }
+}
+
+dependencies {
+
+    compile("org.springframework.boot:spring-boot-starter-undertow")
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-test")
+    compile("org.springframework.data:spring-data-commons")
+    compile("com.orientechnologies:spring-data-orientdb-commons:0.14")
+    compile("com.orientechnologies:spring-boot-orientdb-autoconfigure:0.14")
+    compileOnly("org.projectlombok:lombok:1.16.18")
+
+    //APACHE
+    compile group: 'commons-io', name: 'commons-io', version: '2.5'
+    compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.6'
+    compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
+
+    //SWAGGER
+    compile (group: 'io.springfox', name: 'springfox-swagger2', version: '2.7.0')
+
+    //TEST
+    testCompile("junit:junit")
+
+    //LOG
+    compile "net.logstash.logback:logstash-logback-encoder:4.11"
+}
+
+configurations {
+    compile.exclude module: "spring-boot-starter-tomcat"
+}
+
+configurations.all {
+    resolutionStrategy {
+        //failOnVersionConflict()
+        cacheChangingModulesFor 0, 'hours'
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifactId = "graphflow"
+            artifact jar
+        }
+    }
+}
+
+task buildDocker(type: Docker, dependsOn: build) {
+    baseImage 'openjdk:8-jre-alpine'
+    push = project.hasProperty("push")
+    tagVersion = !version.matches("(.*)SNAPSHOT") ? project.getVersion() : System.getenv('BRANCH_NAME') ?: "develop"
+    tag = 'graphflow/' + project.getName()
+    stageDir = project.file('build/libs')
+    setEnvironment("GRAPHFLOW_PROFILE", "dev")
+    setEnvironment("LINKED_SERVICES", "orientdb:2424")
+    addFile("graphflow.sh", "/")
+    exposePort(11080)
+    addFile(project.getName() + '-' + project.getVersion() + '.jar', '/' + project.getName() + '.jar')
+    runCommand( "apk update && apk add bash tree netcat-openbsd && chmod +x /graphflow.sh")
+    entryPoint(["/graphflow.sh"])
+}
+
+task buildApiDocker(type: Docker, dependsOn: build) {
+    baseImage 'python:3.4-alpine'
+    push = project.hasProperty("push")
+    tagVersion = !version.matches("(.*)SNAPSHOT") ? project.getVersion() : System.getenv('BRANCH_NAME') ?: "develop"
+    tag = 'graphflow/' + 'graphflow-api'
+    stageDir = project.file('build/libs')
+    setEnvironment("API_DIR", "/swagger-api")
+    exposePort(16660)
+    addFile('swagger-ui', '$API_DIR/')
+    runCommand( "apk update && apk add bash tree netcat-openbsd")
+    entryPoint(["python", "-m", "http.server", "16660"])
+}
+
+release {
+    dependsOn buildDocker, build
+    push = project.hasProperty("push")
+    tagPrefix = ''
+}
+
+task wrapper(type: Wrapper) {
+    distributionType=Wrapper.DistributionType.ALL
+    gradleVersion = '4.3'
+}
