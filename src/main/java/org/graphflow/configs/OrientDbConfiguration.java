@@ -33,7 +33,7 @@ public class OrientDbConfiguration {
         OServerAdmin server = new OServerAdmin(orientConfig.getDb())
                 .connect(orientConfig.getUsername(), orientConfig.getPassword());
         if (!server.existsDatabase()) {
-            server.createDatabase("graph", "local");
+            server.createDatabase("graph", null);
         }
         return server;
     }
