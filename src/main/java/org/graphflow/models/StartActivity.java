@@ -12,5 +12,6 @@ public class StartActivity extends AbstractActivity {
 
     @GraphProperty(serialize = false)
     private String gatewayName;
+    private boolean withError;
 
 }
