@@ -3,14 +3,12 @@ package org.graphflow.models;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.graphflow.annotations.VertexEntity;
-import org.graphflow.annotations.GraphProperty;
+
+import java.util.Set;
 
 @VertexEntity
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class StartActivity extends AbstractActivity {
-
-    @GraphProperty(serialize = false)
-    private String gatewayName;
+public class GatewayActivity extends AbstractActivity {
 
 }

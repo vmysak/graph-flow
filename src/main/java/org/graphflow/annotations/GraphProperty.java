@@ -7,7 +7,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface VertexProperty {
+public @interface GraphProperty {
 
     boolean serialize() default true;
 

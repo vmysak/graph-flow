@@ -4,16 +4,16 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tinkerpop.gremlin.orientdb.OrientVertex;
+import org.apache.tinkerpop.gremlin.orientdb.OrientElement;
 import org.graphflow.events.base.FlowEvent;
 import org.graphflow.events.base.ShutdownEvent;
 import org.graphflow.events.base.StartupEvent;
 import org.graphflow.listeners.FlowEventListener;
-import org.graphflow.models.AbstractActivity;
-import org.graphflow.serialization.ActivitySerializer;
-import org.graphflow.serialization.OrientVertexPropertiesSerializer;
-import org.graphflow.serialization.OrientVertexSerializer;
-import org.graphflow.serialization.VertexClassMapping;
+import org.graphflow.models.AbstractEntity;
+import org.graphflow.serialization.EntityClassMapping;
+import org.graphflow.serialization.EntitySerializer;
+import org.graphflow.serialization.OrientElementSerializer;
+import org.graphflow.serialization.OrientPropertiesSerializer;
 import org.graphflow.serialization.strategies.DeserializationStrategy;
 import org.graphflow.serialization.strategies.SerializationStrategy;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -40,12 +40,12 @@ public class SerializationStartupService implements FlowEventListener {
     }
 
     private void setupSerializators() {
-        VertexClassMapping mapping = VertexClassMapping.from(annotationLoaderService);
+        EntityClassMapping mapping = EntityClassMapping.from(annotationLoaderService);
 
         GsonBuilder builder = new GsonBuilder()
-                .registerTypeHierarchyAdapter(AbstractActivity.class, new ActivitySerializer(mapping))
-                .registerTypeAdapter(OrientVertex.class, new OrientVertexSerializer())
-                .registerTypeAdapter(OrientVertexPropertiesSerializer.TYPE, new OrientVertexPropertiesSerializer())
+                .registerTypeHierarchyAdapter(AbstractEntity.class, new EntitySerializer(mapping))
+                .registerTypeHierarchyAdapter(OrientElement.class, new OrientElementSerializer())
+                .registerTypeAdapter(OrientPropertiesSerializer.TYPE, new OrientPropertiesSerializer())
                 .addSerializationExclusionStrategy(new SerializationStrategy())
                 .addDeserializationExclusionStrategy(new DeserializationStrategy());
 

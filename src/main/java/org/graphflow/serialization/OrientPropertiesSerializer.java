@@ -11,7 +11,7 @@ import java.lang.reflect.Type;
 import java.util.Map;
 
 @AllArgsConstructor
-public class OrientVertexPropertiesSerializer implements JsonDeserializer<Map<String, Object>> {
+public class OrientPropertiesSerializer implements JsonDeserializer<Map<String, Object>> {
 
     public static final Type TYPE = new TypeToken<Map<String, Object>>() {
     }.getType();
