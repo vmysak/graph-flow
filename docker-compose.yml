@@ -9,7 +9,7 @@ services:
     environment:
       ORIENTDB_ROOT_PASSWORD: 'orientdb'
     volumes:
-      - orientdb_data:/opt/orientdb/databases
+      - orientdb_data:/opt/orientdb
 
   graphflow:
     image: graphflow/graphflow:develop
