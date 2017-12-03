@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
-import static org.graphflow.utils.OrientUtil.getVertexLabel;
+import static org.graphflow.utils.ActivityGraphUtil.getVertexLabel;
 
 @AllArgsConstructor
 @Service

@@ -8,13 +8,10 @@ import org.springframework.stereotype.Repository;
 
 @AllArgsConstructor
 @Repository
-public class ProcessRepository extends AbstractGraphRepository<StartActivity> {
+public class ProcessRepository extends AbstractActivityRepository<StartActivity> {
 
     public StartActivity saveStartActivity(StartActivity startActivity) {
         Vertex vertex = vertex(startActivity);
-        vertex.property("user", 1);
-        Vertex vertex2 = vertex(startActivity);
-        vertex2.property("user", 2);
         graph().commit();
         return startActivity;
     }

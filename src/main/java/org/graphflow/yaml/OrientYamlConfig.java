@@ -11,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 @AllArgsConstructor
 @ConfigurationProperties("orient")
 @Configuration
-public class OrientConfig {
+public class OrientYamlConfig {
 
     private String url;
     private String username;

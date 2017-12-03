@@ -4,7 +4,7 @@ import com.orientechnologies.orient.client.remote.OServerAdmin;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tinkerpop.gremlin.orientdb.OrientGraphFactory;
-import org.graphflow.yaml.OrientConfig;
+import org.graphflow.yaml.OrientYamlConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -15,14 +15,14 @@ import java.io.IOException;
 @Configuration
 public class OrientDbConfiguration {
 
-    private final OrientConfig orientConfig;
+    private final OrientYamlConfig orientYamlConfig;
 
     @Bean
     public OrientGraphFactory orientGraphFactory(OServerAdmin serverAdmin) {
         OrientGraphFactory factory = new OrientGraphFactory(
-                orientConfig.getDb(),
-                orientConfig.getUsername(),
-                orientConfig.getPassword()
+                orientYamlConfig.getDb(),
+                orientYamlConfig.getUsername(),
+                orientYamlConfig.getPassword()
         );
         factory.setupPool(5);
         return factory;
@@ -30,8 +30,8 @@ public class OrientDbConfiguration {
 
     @Bean
     public OServerAdmin orientDB() throws IOException {
-        OServerAdmin server = new OServerAdmin(orientConfig.getDb())
-                .connect(orientConfig.getUsername(), orientConfig.getPassword());
+        OServerAdmin server = new OServerAdmin(orientYamlConfig.getDb())
+                .connect(orientYamlConfig.getUsername(), orientYamlConfig.getPassword());
         if (!server.existsDatabase()) {
             server.createDatabase("graph", null);
         }
