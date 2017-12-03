@@ -51,9 +51,11 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-test")
     compile("org.springframework.data:spring-data-commons")
-    compile("com.orientechnologies:spring-data-orientdb-commons:0.14")
-    compile("com.orientechnologies:spring-boot-orientdb-autoconfigure:0.14")
+    compile("com.orientechnologies:orientdb-core:3.0.0m2")
+    compile("com.orientechnologies:orientdb-graphdb:3.0.0m2")
+    compile("com.orientechnologies:orientdb-client:3.0.0m2")
     compileOnly("org.projectlombok:lombok:1.16.18")
+    compileOnly "org.springframework.boot:spring-boot-configuration-processor"
 
     //APACHE
     compile group: 'commons-io', name: 'commons-io', version: '2.5'

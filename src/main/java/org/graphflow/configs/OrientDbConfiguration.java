@@ -1,27 +1,37 @@
 package org.graphflow.configs;
 
+import com.orientechnologies.orient.core.db.OrientDB;
+import com.orientechnologies.orient.core.db.OrientDBConfig;
+import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.graphflow.yaml.OrientConfig;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.orient.commons.repository.config.EnableOrientRepositories;
-import org.springframework.data.orient.object.OrientObjectDatabaseFactory;
-import org.springframework.data.orient.object.repository.support.OrientObjectRepositoryFactoryBean;
-import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
-
+@Slf4j
 @AllArgsConstructor
 @Configuration
-@EnableOrientRepositories(
-        basePackages = "org.graphflow",
-        repositoryFactoryBeanClass = OrientObjectRepositoryFactoryBean.class)
 public class OrientDbConfiguration {
 
-    private final OrientObjectDatabaseFactory factory;
+    private final OrientConfig orientConfig;
 
-    @PostConstruct
-    @Transactional
-    public void registerEntities() {
-        factory.db().getEntityManager()
-                .registerEntityClasses("org.graphflow.models");
+    @Bean
+    public OrientGraphFactory orientGraphFactory(OrientDB orientDB) {
+        return new OrientGraphFactory(
+                orientConfig.getUrl() + "/" + orientConfig.getDb(),
+                orientConfig.getUsername(),
+                orientConfig.getPassword()
+        );
     }
+
+    @Bean
+    public OrientDB orientDB() {
+        return new OrientDB(
+                orientConfig.getUrl(),
+                orientConfig.getUsername(),
+                orientConfig.getPassword(),
+                OrientDBConfig.defaultConfig());
+    }
+
 }

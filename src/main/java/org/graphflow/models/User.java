@@ -5,11 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.graphflow.annotations.VertexEntity;
 import org.springframework.data.annotation.CreatedDate;
 
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Version;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,12 +15,11 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(value = {"handler"})
+@VertexEntity
 public class User {
 
-    @Id
     @JsonIgnore
     private String id;
-    @Version
     @JsonIgnore
     private Long version;
     @JsonIgnore
@@ -32,7 +29,6 @@ public class User {
     private String name;
     private Boolean active;
     private String password;
-    @OneToMany
     private Set<Role> roles = new HashSet<>();
 
 }

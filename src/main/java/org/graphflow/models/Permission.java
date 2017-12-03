@@ -5,20 +5,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import javax.persistence.Id;
-import javax.persistence.Version;
+import org.graphflow.annotations.VertexEntity;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(value = {"handler"})
+@VertexEntity
 public class Permission {
 
-    @Id
     @JsonIgnore
     private String id;
-    @Version
     @JsonIgnore
     private Long version;
     private String name;

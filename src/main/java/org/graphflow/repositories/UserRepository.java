@@ -1,10 +1,11 @@
 package org.graphflow.repositories;
 
 import org.graphflow.models.User;
-import org.springframework.data.orient.graph.repository.OrientGraphRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface UserRepository extends OrientGraphRepository<User> {
+public interface UserRepository {
+
+    User save(User user);
 
 }

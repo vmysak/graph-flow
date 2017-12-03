@@ -13,7 +13,8 @@ server:
 spring:
   profiles: dev
 
-spring.data.orient:
-  url: remote:orientdb/graph-flow
+orient:
+  url: remote:orientdb
   username: root
   password: orientdb
+  db: graph-flow
