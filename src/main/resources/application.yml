@@ -17,4 +17,4 @@ orient:
   url: remote:orientdb
   username: root
   password: orientdb
-  db: graph-flow
+  db: ${orient.url}/graph-flow

@@ -1,17 +1,17 @@
 package org.graphflow.utils;
 
-public final class OrientUtil {
+import org.apache.tinkerpop.gremlin.orientdb.OrientGraph;
 
-    private final static String VERTEX_CLASS = "class:";
+public final class OrientUtil {
 
     private OrientUtil() {
     }
 
-    public static String getVertexName(Class<?> clazz) {
-        return clazz.getSimpleName();
+    public static String getVertexLabel(OrientGraph graph, Class<?> clazz) {
+        return graph.classNameToLabel(clazz.getSimpleName());
     }
 
-    public static String getVertexName(Object object) {
-        return VERTEX_CLASS + getVertexName(object.getClass());
+    public static String getVertexLabel(OrientGraph graph, Object object) {
+        return getVertexLabel(graph, object.getClass());
     }
 }

@@ -1,4 +1,4 @@
-package org.graphflow.configs;
+package org.graphflow.filters;
 
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpHeaders;

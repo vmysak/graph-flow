@@ -6,24 +6,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.graphflow.annotations.VertexEntity;
-
-import java.util.HashSet;
-import java.util.Set;
+import org.springframework.data.annotation.CreatedDate;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties(value = {"handler"})
-@VertexEntity
-public class Role {
+public abstract class AbstractActivity {
 
     @JsonIgnore
     private String id;
     @JsonIgnore
     private Long version;
+    @JsonIgnore
+    @CreatedDate
+    private Long created;
     private String name;
-    private String description;
-    private Set<Permission> permissions = new HashSet<>();
-
 
 }

@@ -1,20 +1,20 @@
 package org.graphflow.services;
 
-import com.tinkerpop.blueprints.TransactionalGraph;
-import com.tinkerpop.blueprints.impls.orient.OrientGraphFactory;
-import com.tinkerpop.blueprints.impls.orient.OrientGraphNoTx;
 import lombok.AllArgsConstructor;
+import org.apache.tinkerpop.gremlin.orientdb.OrientGraph;
+import org.apache.tinkerpop.gremlin.orientdb.OrientGraphFactory;
 import org.graphflow.annotations.VertexEntity;
 import org.graphflow.commons.Constants;
 import org.graphflow.events.base.FlowEvent;
 import org.graphflow.events.base.ShutdownEvent;
 import org.graphflow.events.base.StartupEvent;
 import org.graphflow.listeners.FlowEventListener;
-import org.graphflow.utils.OrientUtil;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
+
+import static org.graphflow.utils.OrientUtil.getVertexLabel;
 
 @AllArgsConstructor
 @Service
@@ -40,22 +40,16 @@ public class OrientDBGraphService implements FlowEventListener {
     }
 
     private void createUserGraph() {
-        TransactionalGraph graph = graphFactory.getTx();
-        beanFactory.registerSingleton(Constants.USERS_GRAPH, graph);
+        OrientGraph graph = graphFactory.getTx();
+        beanFactory.registerSingleton(Constants.PROCESS_GRAPH, graph);
         beanFactory.autowireBean(graph);
     }
 
     private void setupGraphs() {
-        OrientGraphNoTx graph = graphFactory.getNoTx();
-        graph.setUseClassForVertexLabel(true);
+        OrientGraph graph = graphFactory.getNoTx();
 
         Set<Class<?>> classes = annotationLoaderService.loadClasses(VertexEntity.class);
-        classes.forEach(clazz -> {
-            String name = OrientUtil.getVertexName(clazz);
-            if (graph.getVertexType(name) == null) {
-                graph.createVertexType(name);
-            }
-        });
+        classes.forEach(clazz -> graph.createVertexClass(getVertexLabel(graph, clazz)));
     }
 
 }

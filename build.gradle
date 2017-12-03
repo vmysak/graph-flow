@@ -51,9 +51,12 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-test")
     compile("org.springframework.data:spring-data-commons")
-    compile("com.orientechnologies:orientdb-core:3.0.0m2")
-    compile("com.orientechnologies:orientdb-graphdb:3.0.0m2")
+    compile(group: 'com.orientechnologies', name: 'orientdb-graphdb', version: '3.0.0m2') {
+        exclude(group: 'com.tinkerpop.blueprints', module: 'blueprints-core')
+    }
+    compile("com.orientechnologies:orientdb-gremlin:3.0.0m2")
     compile("com.orientechnologies:orientdb-client:3.0.0m2")
+    compile("org.apache.tinkerpop:gremlin-core:3.3.0")
     compileOnly("org.projectlombok:lombok:1.16.18")
     compileOnly "org.springframework.boot:spring-boot-configuration-processor"
 
@@ -63,7 +66,7 @@ dependencies {
     compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.1'
 
     //SWAGGER
-    compile (group: 'io.springfox', name: 'springfox-swagger2', version: '2.7.0')
+    compile(group: 'io.springfox', name: 'springfox-swagger2', version: '2.7.0')
 
     //TEST
     testCompile("junit:junit")
@@ -103,7 +106,7 @@ task buildDocker(type: Docker, dependsOn: build) {
     addFile("graphflow.sh", "/")
     exposePort(11080)
     addFile(project.getName() + '-' + project.getVersion() + '.jar', '/' + project.getName() + '.jar')
-    runCommand( "apk update && apk add bash tree netcat-openbsd && chmod +x /graphflow.sh")
+    runCommand("apk update && apk add bash tree netcat-openbsd && chmod +x /graphflow.sh")
     entryPoint(["/graphflow.sh"])
 }
 
@@ -116,7 +119,7 @@ task buildApiDocker(type: Docker, dependsOn: build) {
     setEnvironment("API_DIR", "/swagger-api")
     exposePort(16660)
     addFile('swagger-ui', '$API_DIR/')
-    runCommand( "apk update && apk add bash tree netcat-openbsd")
+    runCommand("apk update && apk add bash tree netcat-openbsd")
     entryPoint(["python", "-m", "http.server", "16660"])
 }
 
@@ -127,6 +130,6 @@ release {
 }
 
 task wrapper(type: Wrapper) {
-    distributionType=Wrapper.DistributionType.ALL
+    distributionType = Wrapper.DistributionType.ALL
     gradleVersion = '4.3'
 }
