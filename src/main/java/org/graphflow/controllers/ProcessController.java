@@ -16,7 +16,7 @@ public class ProcessController {
     private final ProcessService processService;
 
     @PostMapping
-    public StartActivity save(@RequestBody StartActivity startActivity) {
-        return processService.save(startActivity);
+    public String saveStartActivity(@RequestBody StartActivity startActivity) {
+        return processService.saveStartActivity(startActivity);
     }
 }

@@ -1,5 +1,6 @@
 package org.graphflow.repositories;
 
+import com.orientechnologies.orient.core.id.ORID;
 import lombok.AllArgsConstructor;
 import org.apache.tinkerpop.gremlin.structure.Vertex;
 import org.graphflow.commons.Constants;
@@ -10,10 +11,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public class ProcessRepository extends AbstractActivityRepository<StartActivity> {
 
-    public StartActivity saveStartActivity(StartActivity startActivity) {
+    public ORID saveStartActivity(StartActivity startActivity) {
         Vertex vertex = vertex(startActivity);
         graph().commit();
-        return startActivity;
+        return (ORID) vertex.id();
     }
 
     @Override
