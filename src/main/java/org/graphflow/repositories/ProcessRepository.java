@@ -12,13 +12,13 @@ import org.springframework.stereotype.Repository;
 public class ProcessRepository extends AbstractActivityRepository<StartActivity> {
 
     public ORID saveStartActivity(StartActivity startActivity) {
-        Vertex vertex = vertex(startActivity);
-        graph().commit();
+        Vertex vertex = createVertex(startActivity);
+        getGraph().commit();
         return (ORID) vertex.id();
     }
 
     @Override
-    protected String graphName() {
+    public String graphName() {
         return Constants.PROCESS_GRAPH;
     }
 }

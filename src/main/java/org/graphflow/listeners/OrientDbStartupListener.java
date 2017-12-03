@@ -2,7 +2,7 @@ package org.graphflow.listeners;
 
 import lombok.AllArgsConstructor;
 import org.graphflow.events.OrientDBStartupEvent;
-import org.graphflow.services.OrientDBGraphService;
+import org.graphflow.startup.OrientDBStartupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
@@ -14,10 +14,10 @@ public class OrientDbStartupListener implements ApplicationListener<OrientDBStar
 
     private static final Logger LOG = LoggerFactory.getLogger(OrientDbStartupListener.class);
 
-    private final OrientDBGraphService orientDBGraphService;
+    private final OrientDBStartupService orientDBStartupService;
 
     @Override
     public void onApplicationEvent(OrientDBStartupEvent event) {
-        orientDBGraphService.onStartupEvent(event);
+        orientDBStartupService.onStartupEvent(event);
     }
 }

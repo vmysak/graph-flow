@@ -1,26 +1,26 @@
 package org.graphflow.utils;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.tinkerpop.gremlin.orientdb.OrientGraph;
+import org.apache.tinkerpop.gremlin.orientdb.OrientVertex;
 import org.graphflow.models.AbstractActivity;
-
-import java.util.Map;
 
 @Slf4j
 public final class ActivityGraphUtil {
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-
     private ActivityGraphUtil() {
     }
 
-    public static Map<String, Object> getVertexBody(AbstractActivity activity) {
-            return objectMapper.convertValue(activity, Map.class);
+    public static String getVertexClass(OrientVertex vertex){
+        return vertex.getGraph().labelToClassName(vertex.label(), null);
+    }
+
+    public static String getVertexLabel(OrientGraph graph, String classSimpleName) {
+        return graph.classNameToLabel(classSimpleName);
     }
 
     public static String getVertexLabel(OrientGraph graph, Class<?> clazz) {
-        return graph.classNameToLabel(clazz.getSimpleName());
+        return getVertexLabel(graph, clazz.getSimpleName());
     }
 
     public static String getVertexLabel(OrientGraph graph, AbstractActivity object) {

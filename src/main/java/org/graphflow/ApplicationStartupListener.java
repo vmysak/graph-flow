@@ -2,6 +2,7 @@ package org.graphflow;
 
 import lombok.AllArgsConstructor;
 import org.graphflow.events.OrientDBStartupEvent;
+import org.graphflow.events.SerializationStartupEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
@@ -20,6 +21,7 @@ public class ApplicationStartupListener implements ApplicationListener<Applicati
     @Override
     public void onApplicationEvent(final ApplicationReadyEvent event) {
         publisher.publishEvent(new OrientDBStartupEvent(this));
+        publisher.publishEvent(new SerializationStartupEvent(this));
     }
 
 }

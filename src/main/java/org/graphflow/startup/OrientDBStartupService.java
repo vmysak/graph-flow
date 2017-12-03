@@ -1,6 +1,7 @@
-package org.graphflow.services;
+package org.graphflow.startup;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.tinkerpop.gremlin.orientdb.OrientGraph;
 import org.apache.tinkerpop.gremlin.orientdb.OrientGraphFactory;
 import org.graphflow.annotations.VertexEntity;
@@ -12,13 +13,14 @@ import org.graphflow.listeners.FlowEventListener;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.Set;
+import java.util.Map;
 
 import static org.graphflow.utils.ActivityGraphUtil.getVertexLabel;
 
+@Slf4j
 @AllArgsConstructor
 @Service
-public class OrientDBGraphService implements FlowEventListener {
+public class OrientDBStartupService implements FlowEventListener {
 
     private final AnnotationLoaderService annotationLoaderService;
     private final OrientGraphFactory graphFactory;
@@ -32,6 +34,7 @@ public class OrientDBGraphService implements FlowEventListener {
     public void onStartupEvent(StartupEvent event) {
         setupGraphs();
         createUserGraph();
+        log.info("DB Initialization completed");
     }
 
     @Override
@@ -48,8 +51,8 @@ public class OrientDBGraphService implements FlowEventListener {
     private void setupGraphs() {
         OrientGraph graph = graphFactory.getNoTx();
 
-        Set<Class<?>> classes = annotationLoaderService.loadClasses(VertexEntity.class);
-        classes.forEach(clazz -> graph.createVertexClass(getVertexLabel(graph, clazz)));
+        Map<String, Class<?>> classes = annotationLoaderService.loadClasses(VertexEntity.class);
+        classes.forEach((name, clazz) -> graph.createVertexClass(getVertexLabel(graph, name)));
     }
 
 }
